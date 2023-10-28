@@ -14,21 +14,6 @@
     </style>
     <textarea id="input" placeholder="input"></textarea>
     <textarea id="output" placeholder="output"></textarea>
-    <script type="module">
-        import { TransformPoints } from './TransformPoints.js';
-
-        // Demonstrirajte uporabo razreda TransformPoints v dokumentu index.html
-        // z dvema elementoma <textarea>, enim za vhod in drugim za izhod.
-        // Ko se vhodno polje spremeni, transformirajte vhod s postopkom iz razreda
-        // TransformPoints in izhod zapišite v izhodno polje.
-
-        const inputEl = document.getElementById('input');
-        const outputEl = document.getElementById('output');
-
-        inputEl.addEventListener('change', e => {
-            const tp = new TransformPoints();
-            outputEl.value = tp.transformPoints(inputEl.value);
-        });
-    </script>
+    <script type="module" src="main.mjs"></script>
 </body>
 </html>
