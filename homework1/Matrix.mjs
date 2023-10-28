@@ -8,50 +8,91 @@
 
 import {dot} from "./Vector.mjs";
 
-export function identity() {
-    return [
-        [1, 0, 0, 0],
-        [0, 1, 0, 0],
-        [0, 0, 1, 0],
-        [0, 0, 0, 1]
-    ]
+export function identity({cols, rows} = {rows: 4, cols: 4}) {
+    const m = [];
+    for (let r = 0; r < rows; r++) {
+        m.push(Array.from({length: cols}).map((_, i) => i === r ? 1 : 0))
+    }
+    return m;
 }
 
+
 export function translation(t) {
-    // TODO implement
+    const r = identity({
+        rows: t.length + 1,
+        cols: t.length + 1
+    });
+
+    for (let i = 0; i < t.length; i++) {
+        r[i][t.length] = t[i];
+    }
+
+    return r;
 }
 
 export function scaling(s) {
-    // TODO implement
+    const r = identity({rows: s.length, cols: s.length});
+    for (let i = 0; i < s.length; i++) {
+        r[i][i] = s[i];
+    }
+    return r;
 }
 
 export function rotationX(angle) {
-    // TODO implement
+    const cosA = Math.cos(angle);
+    const sinA = Math.sin(angle);
+    return [
+        [1, 0, 0, 0],
+        [0, cosA, -sinA, 0],
+        [0, sinA, cosA, 0],
+        [0, 0, 0, 1],
+    ];
 }
 
 export function rotationY(angle) {
-    // TODO implement
+    const cosA = Math.cos(angle);
+    const sinA = Math.sin(angle);
+    return [
+        [cosA, 0, sinA, 0],
+        [0, 1, 0, 0],
+        [-sinA, 0, cosA, 0],
+        [0, 0, 0, 1],
+    ];
 }
 
 export function rotationZ(angle) {
-    // TODO implement
+    const cosA = Math.cos(angle);
+    const sinA = Math.sin(angle);
+    return [
+        [cosA, -sinA, 0, 0],
+        [sinA, cosA, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1],
+    ];
 }
 
 export function negate(m) {
-    // TODO implement
+    return m.map(row => row.map(e => -e));
 }
 
 export function add(m, n) {
-    // TODO implement
+    const dimensions = getDimensions(m);
+    const r = identity(dimensions);
+    for (let row = 0; row < dimensions.rows; row++) {
+        for (let col = 0; col < dimensions.cols; col++) {
+            r[row][col] = m[row][col] + n[row][col];
+        }
+    }
+    return r;
 }
 
 export function subtract(m, n) {
-    // TODO implement
+    return add(m, negate(n));
 }
 
 export function transpose(m) {
     const {rows, cols} = getDimensions(m)
-    const tm = init({
+    const tm = identity({
         cols: rows,
         rows: cols
     });
@@ -71,7 +112,7 @@ export function multiply(m, n) {
     if (mDim.cols !== nDim.rows) {
         throw new Error("Invalid input matrices. The number of columns of `m` must match the number of rows of `n`.")
     }
-    const r = init({
+    const r = identity({
         cols: nDim.cols,
         rows: mDim.rows
     });
@@ -109,12 +150,4 @@ function getCol(m, col) {
         column.push(m[row][col])
     }
     return column;
-}
-
-function init({cols, rows}) {
-    const m = [];
-    for (let r = 0; r < rows; r++) {
-        m.push(Array.from({length: cols}).map(() => 0))
-    }
-    return m;
 }

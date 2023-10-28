@@ -1,6 +1,27 @@
-import {multiply, transform, transpose} from "./Matrix.mjs";
+import {
+    add,
+    identity,
+    multiply,
+    negate,
+    rotationX,
+    scaling,
+    subtract,
+    transform,
+    translation,
+    transpose
+} from "./Matrix.mjs";
 
 describe('Matrix', () => {
+    it('should init identity', () => {
+        expect(identity()).toEqual(
+            [
+                [1, 0, 0, 0],
+                [0, 1, 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 1]
+            ]
+        )
+    });
 
     it('should multiply matrices', () => {
         expect(multiply(
@@ -66,4 +87,77 @@ describe('Matrix', () => {
             ]
         )
     });
+
+    it('should negate a matrix', () => {
+        expect(negate(
+            [
+                [1, 2],
+                [0, 1]
+            ]
+        )).toEqual(
+            [
+                [-1, -2],
+                [0, -1]
+            ]
+        )
+    });
+
+    it('should generate scaling matrix', () => {
+        expect(scaling([1, 2, 3, 4])).toEqual(
+            [
+                [1, 0, 0, 0],
+                [0, 2, 0, 0],
+                [0, 0, 3, 0],
+                [0, 0, 0, 4]
+            ]
+        )
+    });
+
+    it('should generate translation matrix', () => {
+        expect(translation([1, 2, 3])).toEqual(
+            [
+                [1, 0, 0, 1],
+                [0, 1, 0, 2],
+                [0, 0, 1, 3],
+                [0, 0, 0, 1]
+            ]
+        )
+    });
+
+    it('should sum matrices', () => {
+        expect(add(
+            [
+                [1, 2],
+                [3, 4]
+            ],
+            [
+                [-1, -2],
+                [-3, -4]
+            ]
+        )).toEqual(
+            [
+                [0, 0],
+                [0, 0],
+            ]
+        )
+    });
+
+    it('should subtract matrices', () => {
+        expect(subtract(
+            [
+                [1, 2],
+                [3, 4]
+            ],
+            [
+                [-1, -2],
+                [-3, -4]
+            ]
+        )).toEqual(
+            [
+                [2, 4],
+                [6, 8],
+            ]
+        )
+    });
+
 });
