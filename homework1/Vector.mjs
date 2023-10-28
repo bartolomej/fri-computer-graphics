@@ -2,49 +2,73 @@
 // return [ 1, 2, 3, 4 ];
 
 export function negate(v) {
-    // TODO implement
+    return v.map(e => -e);
 }
 
 export function add(v, w) {
-    // TODO implement
+    return v.map((e, i) => e + w[i]);
 }
 
 export function subtract(v, w) {
-    // TODO implement
+    return add(v, negate(w));
 }
 
 export function multiply(v, w) {
-    // TODO implement
+    return v.map((e, i) => e * w[i]);
 }
 
 export function divide(v, w) {
-    // TODO implement
+    return multiply(v, inverse(w))
 }
 
 export function dot(v, w) {
-    // TODO implement
+    return multiply(v, w).reduce((sum, e) => sum + e, 0);
 }
 
 export function cross(v, w) {
-    // TODO implement
+    if (v.length !== 3 || w.length !== 3) {
+        throw new Error("Cross product is only defined for 3d vectors")
+    }
+    return [
+        v[1] * w[2] - v[2] * w[1],
+        v[2] * w[0] - v[0] * w[2],
+        v[0] * w[1] - v[1] * w[0],
+    ]
 }
 
 export function length(v) {
-    // TODO implement
+    return Math.sqrt(v.map(e => e ** 2).reduce((sum, e) => sum + e, 0))
 }
 
 export function normalize(v) {
-    // TODO implement
+    return multiply(v, inverse(v));
 }
 
 export function project(v, w) {
-    // TODO implement
+    return multiplyScalar(w, dot(v, w) / length(w) ** 2);
 }
 
-export function reflect(v, w) {
-    // TODO implement
+export function reflect(d, n) {
+    return subtract(d, multiplyScalar(n, (dot(d, n) * 2) / length(n) ** 2))
 }
 
 export function angle(v, w) {
-    // TODO implement
+    // The result of the inner expression may have numerical errors,
+    // so it can cause acos to return NaN if the value is outside its defined domain.
+    // To avoid that, let's clamp the value to the min/max domain range.
+    return Math.acos(clamp(dot(v, w) / (length(v) * length(w)), -1, 1))
+}
+
+// Helpers
+
+function inverse(v) {
+    return v.map((e) => 1 / e);
+}
+
+function multiplyScalar(v, k) {
+    return v.map(v => v * k)
+}
+
+function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max)
 }
